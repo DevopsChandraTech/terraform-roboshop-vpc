@@ -4,5 +4,6 @@ locals {
         Terraform = true
         Project = "roboshop"
     }
+    az_names = data.aws_availability_zones.available.names
 }
 

@@ -30,15 +30,16 @@ resource "aws_subnet" "public" {
   count = length(var.public_cidr)
   vpc_id     = aws_vpc.main.id
   cidr_block = var.public_cidr[count.index]
-  availability_zone = var.az[count.index]
+  availability_zone = local.az_names[count.index]
+  map_public_ip_on_launch = true
 
   tags = merge(
     local.common_tags,
     var.public_tags,
     {
-        Name = "${local.common_name_suffix}-public-${var.az[count.index]}" #roboshop-dev-public-us-east-1
+        Name = "${local.common_name_suffix}-public-${local.az_names[count.index]}" #roboshop-dev-public-us-east-1
     }
-  )
+)
 }
 
 #PRIVATE-SUBNETS
@@ -46,13 +47,13 @@ resource "aws_subnet" "private" {
   count = length(var.private_cidr)
   vpc_id     = aws_vpc.main.id
   cidr_block = var.private_cidr[count.index]
-  availability_zone = var.az[count.index]
+  availability_zone = local.az_names[count.index]
 
   tags = merge(
     local.common_tags,
     var.private_tags,
     {
-        Name = "${local.common_name_suffix}-private-${var.az[count.index]}" #roboshop-dev-private-us-east-1a
+        Name = "${local.common_name_suffix}-private-${local.az_names[count.index]}" #roboshop-dev-private-us-east-1a
     }
   )
 }
@@ -62,13 +63,13 @@ resource "aws_subnet" "database" {
   count = length(var.database_cidr)
   vpc_id     = aws_vpc.main.id
   cidr_block = var.database_cidr[count.index]
-  availability_zone = var.az[count.index]
+  availability_zone = local.az_names[count.index]
 
   tags = merge(
     local.common_tags,
     var.database_tags,
     {
-        Name = "${local.common_name_suffix}-database-${var.az[count.index]}" #roboshop-dev-private-us-east-1a
+        Name = "${local.common_name_suffix}-database-${local.az_names[count.index]}" #roboshop-dev-database-us-east-1a
     }
   )
 }

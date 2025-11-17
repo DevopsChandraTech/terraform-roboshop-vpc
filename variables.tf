@@ -26,10 +26,6 @@ variable "public_cidr" {
     type = list
 }
 
-variable "az" {
-    type = list
-}
-
 variable "private_cidr" {
     type = list
 }
