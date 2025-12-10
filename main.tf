@@ -118,38 +118,38 @@ resource "aws_route" "public_route" {
 }
 
 
-#ELASTIC-IP
-resource "aws_eip" "nat" {
-  domain   = "vpc"
-  tags = {
-    Name = "${local.common_name_suffix}-eip"
-  }
-}
+# #ELASTIC-IP
+# resource "aws_eip" "nat" {
+#   domain   = "vpc"
+#   tags = {
+#     Name = "${local.common_name_suffix}-eip"
+#   }
+# }
 
-#NAT-GATEWAY
-resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public[0].id
+# #NAT-GATEWAY
+# resource "aws_nat_gateway" "nat" {
+#   allocation_id = aws_eip.nat.id
+#   subnet_id     = aws_subnet.public[0].id
 
-tags = merge(
-  local.common_tags,
-  var.nat_gatway_tags,
-    {
-      Name = "${local.common_name_suffix}-nat-gateway" #roboshop-dev-private-us-east-1a
-    }
-  )
+# tags = merge(
+#   local.common_tags,
+#   var.nat_gatway_tags,
+#     {
+#       Name = "${local.common_name_suffix}-nat-gateway" #roboshop-dev-private-us-east-1a
+#     }
+#   )
 
-  # To ensure proper ordering, it is recommended to add an explicit dependency
-  # on the Internet Gateway for the VPC.
-  depends_on = [aws_internet_gateway.igw]
-}
+#   # To ensure proper ordering, it is recommended to add an explicit dependency
+#   # on the Internet Gateway for the VPC.
+#   depends_on = [aws_internet_gateway.igw]
+# }
 
-#PRIVATE EGRESS ROUTE TO NAT
-resource "aws_route" "private_route" {
-  route_table_id            = aws_route_table.private.id
-  destination_cidr_block    = "0.0.0.0/0"
-  nat_gateway_id = aws_nat_gateway.nat.id
-}
+# #PRIVATE EGRESS ROUTE TO NAT
+# resource "aws_route" "private_route" {
+#   route_table_id            = aws_route_table.private.id
+#   destination_cidr_block    = "0.0.0.0/0"
+#   nat_gateway_id = aws_nat_gateway.nat.id
+# }
 
 #DATABASE EGRESS ROUTE TO NAT
 resource "aws_route" "database_route" {
